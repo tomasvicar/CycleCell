@@ -62,11 +62,6 @@ if __name__ == '__main__':
                 
     gen = inf_train_gen()
     
-
-    one = torch.FloatTensor([1])
-    mone = one * -1
-    one = one.cuda()
-    mone = mone.cuda()
     
 #    trainloader=iter(trainloader)
 
@@ -109,10 +104,10 @@ if __name__ == '__main__':
             
             dapi.requires_grad=True
     
-            out_dapi_real=D_dapi(dapi).mean()
-            out_dapi_real.backward(mone)
+            out_dapi_real=-D_dapi(dapi).mean()
+            out_dapi_real.backward()
             out_dapi_fake=D_dapi(fake_dapi).mean()
-            out_dapi_fake.backward(one)
+            out_dapi_fake.backward()
             
             
             dapi = dapi.detach()
@@ -134,8 +129,8 @@ if __name__ == '__main__':
             gradient_penalty.backward()
             
             
-            loss=out_dapi_fake-out_dapi_real+gradient_penalty
-            w_loss=out_dapi_fake-out_dapi_real
+            loss=out_dapi_fake+out_dapi_real+gradient_penalty
+            w_loss=out_dapi_fake+out_dapi_real
             
             
             
@@ -161,10 +156,10 @@ if __name__ == '__main__':
         
         fake_dapi=unet_qpi2dapi(qpi)
         
-        loss_G = D_dapi(fake_dapi).mean()
+        loss_G = -D_dapi(fake_dapi).mean()
         
 #            
-        loss_G.backward(mone)
+        loss_G.backward()
         optimizer_unet_qpi2dapi.step()
 
 
