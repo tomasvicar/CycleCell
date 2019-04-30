@@ -1,5 +1,5 @@
 clc;clear all;close all
-kolik=10000;
+kolik=20000;
 odkud_kam=[10 300];
 sizes=[128 128];
 
@@ -53,11 +53,11 @@ for k=1:kolik
     
 %     disp(size(qpi))
     
-    imwrite_single(qpi,['../data_patch1/qpi_' num2str(k,'%07.f') '.tif'])
-    imwrite_single(dapi,['../data_patch1/dapi_' num2str(k,'%07.f') '.tif'])
+    imwrite_single(qpi,['../data_patch_all/qpi_' num2str(k,'%07.f') '.tif'])
+    imwrite_single(dapi,['../data_patch_all/dapi_' num2str(k,'%07.f') '.tif'])
     
 end
 
-aaaa=imread(['../data_patch1/qpi_' num2str(k-1,'%07.f') '.tif']);
+% aaaa=imread(['../data_patch1/qpi_' num2str(k-1,'%07.f') '.tif']);
 
 

@@ -26,10 +26,10 @@ batch = 32
 path_to_data='../data_patch1'
 n_critic=5
 lam=10
-lam2=10
+lam2=1
 
 
-fol='../tmp2'
+fol='../l1_1'
 try:
     os.mkdir(fol)
 except:
@@ -246,10 +246,10 @@ if __name__ == '__main__':
             from_qpi_example=np.concatenate((qpi[0,0,:,:].data.cpu().numpy(),fake_dapi[0,0,:,:].data.cpu().numpy(),fake_fake_qpi[0,0,:,:].data.cpu().numpy()),axis=1)
             print(itt)
             plt.imshow(from_dapi_example,vmin=-0.5, vmax=0.5)
-            plt.savefig(fol+'/result'+ str(itt).zfill(7) +'.png', format='png', dpi=200,bbox_inches='tight')
+            plt.savefig(fol+'/result1'+ str(itt).zfill(7) +'.png', format='png', dpi=200,bbox_inches='tight')
             plt.show()
             plt.imshow(from_qpi_example,vmin=-0.5, vmax=0.5)
-            plt.savefig(fol+'/result'+ str(itt).zfill(7) +'.png', format='png', dpi=200,bbox_inches='tight')
+            plt.savefig(fol+'/result2'+ str(itt).zfill(7) +'.png', format='png', dpi=200,bbox_inches='tight')
             plt.show()
         
 
