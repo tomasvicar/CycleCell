@@ -14,13 +14,36 @@ class DataLoader(data.Dataset):
         self.paired=paired
         self.path_to_data=path_to_data
         
+        
+        
         self.file_names=[]
         for root, dirs, files in os.walk(self.path_to_data):
             for name in files:
                 if name.endswith(".tif") and name.startswith("qpi"):
                     self.file_names.append(root+'\\'+name)
+                    
+        st0 = np.random.get_state()
+        np.random.seed(0)
+        
+        
+        if split!="test":
+            r=np.random.choice(len(self.file_names),size=19000,replace=False)
+            rr=np.arange(len(self.file_names))
+            rr=np.delete(rr,r)
+            
+            
+            np.random.set_state(st0)
+        
+        
+        if split=="train":
+            self.file_names=[self.file_names[i] for i in r]
+            
+        if split=="valid":
+            self.file_names=[self.file_names[i] for i in rr]
         
         self.num_of_img=len(self.file_names)
+        
+        print(self.num_of_img)
         
     def __len__(self):
         return self.num_of_img
@@ -50,7 +73,7 @@ class DataLoader(data.Dataset):
         dapi=np.transpose(dapi,(2, 0, 1))
         dapi=torch.from_numpy(dapi)
         
-        return qpi,dapi
+        return qpi,dapi,name_qpi,name_dapi
         
         
         

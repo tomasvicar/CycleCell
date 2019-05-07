@@ -74,7 +74,7 @@ for k=1:length(names_qpi)
     name_qpi=names_qpi{k};
     name_dapi=names_dapi{k};
     
-    for kk=odkud_kam
+    for kk=odkud_kam(1):odkud_kam(2)
         
            
         
