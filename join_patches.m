@@ -23,7 +23,7 @@ names_dapi=names_dapi(6:7);
 
 
 vahokno=2*ones(128);
-vahokno=conv2(vahokno,ones(2*28+1)/sum(sum(ones(2*28+1))),'same');
+vahokno=conv2(vahokno,ones(2*28+1(sum(ones(2*28+1))),'same');
 vahokno=vahokno-1;
 vahokno(vahokno<0.01)=0.01;
 

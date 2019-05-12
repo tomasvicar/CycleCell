@@ -28,10 +28,10 @@ path_to_data_train='../data_patch_15'
 path_to_data_test='../data_patch_test67'
 n_critic=5
 lam=10
-lam2=0.1#jak moc cycle
+lam2=0#jak moc cycle
 
 
-fol='../l22_01'
+fol='../l2_u'
 try:
     os.mkdir(fol)
 except:
@@ -64,7 +64,7 @@ def get_lr(optimizer):
 if __name__ == '__main__':
     
     
-    loader = DataLoader(split='train',path_to_data=path_to_data_train,paired=False)
+    loader = DataLoader(split='train',path_to_data=path_to_data_train,paired=True)
     trainloader= data.DataLoader(loader, batch_size=batch, num_workers=4, shuffle=True,drop_last=True,pin_memory=False)
     
     loader = DataLoader(split='valid',path_to_data=path_to_data_train,paired=True)
@@ -137,103 +137,103 @@ if __name__ == '__main__':
         D_dapi.train()
         unet_dapi2qpi.train()
         D_qpi.train()
-        
-        for p in unet_qpi2dapi.parameters():  
-            p.requires_grad = False
-        for p in unet_dapi2qpi.parameters():  
-            p.requires_grad = False
-        for p in D_dapi.parameters():  
-            p.requires_grad = True
-        for p in D_qpi.parameters():  
-            p.requires_grad = True
-    
-        for t in range(n_critic):
-            
-            (qpi,dapi,name_qpi,name_dapi)=next(gen)
-        
-            qpi = qpi.cuda(0)
-            dapi = dapi.cuda(0)
-            
-            
-            
-
-            qpi.requires_grad=False
-            optimizer_D_dapi.zero_grad() 
-            
-            fake_dapi=unet_qpi2dapi(qpi)
-            fake_dapi=fake_dapi.detach()
-            fake_dapi.requires_grad=True
-            
-            s=dapi.size()
-            dapi.requires_grad=True
-    
-            out_dapi_real=-D_dapi(dapi).mean()
-            out_dapi_real.backward()
-            out_dapi_fake=D_dapi(fake_dapi).mean()
-            out_dapi_fake.backward()
-            
-            dapi = dapi.detach()
-            fake_dapi = fake_dapi.detach()
-            dapi.requires_grad=True
-            fake_dapi.requires_grad=True
-            
-            gradient_penalty=grad_pen(batch,lam,dapi,fake_dapi,D_dapi)
-            gradient_penalty.backward()
-            
-            loss_D_dapi=out_dapi_fake+out_dapi_real+gradient_penalty
-            w_loss_D_dapi=out_dapi_fake+out_dapi_real
-            
-            optimizer_D_dapi.step()
-            
-            
-            
-            
-
-            dapi=dapi.detach()
-            dapi.requires_grad=False
-            qpi=qpi.detach()
-            qpi.requires_grad=True
-            optimizer_D_qpi.zero_grad() 
-            
-            fake_qpi=unet_dapi2qpi(dapi)
-            fake_qpi=fake_qpi.detach()
-            fake_qpi.requires_grad=True
-            
-            s=qpi.size()
-    
-            out_qpi_real=-D_qpi(qpi).mean()
-            out_qpi_real.backward()
-            out_qpi_fake=D_qpi(fake_qpi).mean()
-            out_qpi_fake.backward()
-            
-            qpi = qpi.detach()
-            fake_qpi = fake_qpi.detach()
-            qpi.requires_grad=True
-            fake_qpi.requires_grad=True
-            
-            gradient_penalty=grad_pen(batch,lam,qpi,fake_qpi,D_qpi)
-            gradient_penalty.backward()
-            
-            loss_D_qpi=out_qpi_fake+out_qpi_real+gradient_penalty
-            w_loss_D_qpi=out_qpi_fake+out_qpi_real
-            
-            optimizer_D_qpi.step()
-            
-            
-            
-            
-            
-            
-            
-        for p in D_dapi.parameters(): 
-            p.requires_grad = False
-        for p in D_qpi.parameters(): 
-            p.requires_grad = False
-            
-        for p in unet_qpi2dapi.parameters():  
-            p.requires_grad = True
-        for p in unet_dapi2qpi.parameters():  
-            p.requires_grad = True    
+#        
+#        for p in unet_qpi2dapi.parameters():  
+#            p.requires_grad = False
+#        for p in unet_dapi2qpi.parameters():  
+#            p.requires_grad = False
+#        for p in D_dapi.parameters():  
+#            p.requires_grad = True
+#        for p in D_qpi.parameters():  
+#            p.requires_grad = True
+#    
+#        for t in range(n_critic):
+#            
+#            (qpi,dapi,name_qpi,name_dapi)=next(gen)
+#        
+#            qpi = qpi.cuda(0)
+#            dapi = dapi.cuda(0)
+#            
+#            
+#            
+#
+#            qpi.requires_grad=False
+#            optimizer_D_dapi.zero_grad() 
+#            
+#            fake_dapi=unet_qpi2dapi(qpi)
+#            fake_dapi=fake_dapi.detach()
+#            fake_dapi.requires_grad=True
+#            
+#            s=dapi.size()
+#            dapi.requires_grad=True
+#    
+#            out_dapi_real=-D_dapi(dapi).mean()
+#            out_dapi_real.backward()
+#            out_dapi_fake=D_dapi(fake_dapi).mean()
+#            out_dapi_fake.backward()
+#            
+#            dapi = dapi.detach()
+#            fake_dapi = fake_dapi.detach()
+#            dapi.requires_grad=True
+#            fake_dapi.requires_grad=True
+#            
+#            gradient_penalty=grad_pen(batch,lam,dapi,fake_dapi,D_dapi)
+#            gradient_penalty.backward()
+#            
+#            loss_D_dapi=out_dapi_fake+out_dapi_real+gradient_penalty
+#            w_loss_D_dapi=out_dapi_fake+out_dapi_real
+#            
+#            optimizer_D_dapi.step()
+#            
+#            
+#            
+#            
+#
+#            dapi=dapi.detach()
+#            dapi.requires_grad=False
+#            qpi=qpi.detach()
+#            qpi.requires_grad=True
+#            optimizer_D_qpi.zero_grad() 
+#            
+#            fake_qpi=unet_dapi2qpi(dapi)
+#            fake_qpi=fake_qpi.detach()
+#            fake_qpi.requires_grad=True
+#            
+#            s=qpi.size()
+#    
+#            out_qpi_real=-D_qpi(qpi).mean()
+#            out_qpi_real.backward()
+#            out_qpi_fake=D_qpi(fake_qpi).mean()
+#            out_qpi_fake.backward()
+#            
+#            qpi = qpi.detach()
+#            fake_qpi = fake_qpi.detach()
+#            qpi.requires_grad=True
+#            fake_qpi.requires_grad=True
+#            
+#            gradient_penalty=grad_pen(batch,lam,qpi,fake_qpi,D_qpi)
+#            gradient_penalty.backward()
+#            
+#            loss_D_qpi=out_qpi_fake+out_qpi_real+gradient_penalty
+#            w_loss_D_qpi=out_qpi_fake+out_qpi_real
+#            
+#            optimizer_D_qpi.step()
+#            
+#            
+#            
+#            
+#            
+#            
+#            
+#        for p in D_dapi.parameters(): 
+#            p.requires_grad = False
+#        for p in D_qpi.parameters(): 
+#            p.requires_grad = False
+#            
+#        for p in unet_qpi2dapi.parameters():  
+#            p.requires_grad = True
+#        for p in unet_dapi2qpi.parameters():  
+#            p.requires_grad = True    
             
             
         optimizer_unet_qpi2dapi.zero_grad() 
@@ -250,17 +250,22 @@ if __name__ == '__main__':
         
         
         fake_dapi=unet_qpi2dapi(qpi)
-        fake_fake_qpi=unet_dapi2qpi(fake_dapi)
-        loss_G_dapi = -D_dapi(fake_dapi).mean()
-        loss_cycle_qpi=l2_loss(fake_fake_qpi,qpi)
+        loss_dapi=l2_loss(fake_dapi,dapi)
+#        fake_fake_qpi=unet_dapi2qpi(fake_dapi)
+#        loss_G_dapi = -D_dapi(fake_dapi).mean()
+#        loss_cycle_qpi=l1_loss(fake_fake_qpi,qpi)
+#        loss_G_dapi = -D_dapi(fake_dapi).mean()
         
         fake_qpi=unet_dapi2qpi(dapi)
-        fake_fake_dapi=unet_qpi2dapi(fake_qpi)
-        loss_G_qpi = -D_qpi(fake_qpi).mean()
-        loss_cycle_dapi=l2_loss(fake_fake_dapi,dapi)
+        loss_qpi=l2_loss(fake_qpi,qpi)
+#        fake_fake_dapi=unet_qpi2dapi(fake_qpi)
+#        loss_G_qpi = -D_qpi(fake_qpi).mean()
+#        loss_cycle_dapi=l1_loss(fake_fake_dapi,dapi)
+#        fake_fake_dapi=unet_qpi2dapi(fake_qpi)
         
-        loss=loss_G_dapi+loss_G_qpi+lam2*loss_cycle_dapi+lam2*loss_cycle_qpi
-#            
+#        loss=loss_G_dapi+loss_G_qpi+lam2*loss_cycle_dapi+lam2*loss_cycle_qpi
+        loss=loss_dapi+loss_qpi
+        
         loss.backward()
         optimizer_unet_qpi2dapi.step()
         optimizer_unet_dapi2qpi.step()
@@ -268,8 +273,8 @@ if __name__ == '__main__':
 
         
         if itt%5==0:
-            from_dapi_example=np.concatenate((dapi[0,0,:,:].data.cpu().numpy(),fake_qpi[0,0,:,:].data.cpu().numpy(),fake_fake_dapi[0,0,:,:].data.cpu().numpy()),axis=1)
-            from_qpi_example=np.concatenate((qpi[0,0,:,:].data.cpu().numpy(),fake_dapi[0,0,:,:].data.cpu().numpy(),fake_fake_qpi[0,0,:,:].data.cpu().numpy()),axis=1)
+            from_dapi_example=np.concatenate((dapi[0,0,:,:].data.cpu().numpy(),fake_qpi[0,0,:,:].data.cpu().numpy()),axis=1)
+            from_qpi_example=np.concatenate((qpi[0,0,:,:].data.cpu().numpy(),fake_dapi[0,0,:,:].data.cpu().numpy()),axis=1)
             print(str(itt) +'_'+ str(get_lr(optimizer_unet_qpi2dapi)) +'_valid_loss' + str(valid_l2_dapi[-1]))
             plt.plot(valid_iters,valid_l2_qpi)
             plt.show()
