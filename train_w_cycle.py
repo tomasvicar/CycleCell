@@ -24,14 +24,15 @@ from tifffile import imsave
 iterace=5000
 init_lr = 1e-3
 batch = 32 
-path_to_data_train='../data_patch_15'
+path_to_data_train='../data_patch_all'
+#path_to_data_train='../data_patch_15'
 path_to_data_test='../data_patch_test67'
 n_critic=5
 lam=10
 lam2=0.1#jak moc cycle
 
 
-fol='../l22_01'
+fol='../l2_01_alltrain'
 try:
     os.mkdir(fol)
 except:

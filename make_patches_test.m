@@ -78,7 +78,7 @@ for k=1:length(names_qpi)
         
            
         
-        img_num=img_num+1;
+       img_num=img_num+1;
         
         patch_num=0;
         

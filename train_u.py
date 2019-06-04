@@ -300,11 +300,11 @@ if __name__ == '__main__':
                 
                 
                 fake_dapi=unet_qpi2dapi(qpi)
-                l2_dapi=l2_loss(fake_dapi,dapi)
+                l2_dapi=l1_loss(fake_dapi,dapi)
                 
                 
                 fake_qpi=unet_dapi2qpi(dapi)
-                l2_qpi=l2_loss(fake_qpi,qpi)
+                l2_qpi=l1_loss(fake_qpi,qpi)
                 
                 
                 valid_l2_qpi_tmp.append(l2_qpi.detach().cpu().numpy())

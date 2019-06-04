@@ -19,18 +19,7 @@ sizes=[128 128];
 %     '../l22_100','../l22_100_alltrain','../l22_100_last','../l22_100_alltrain_last'...
 %     };
 
-results_paths={'../l2_0_last',...
-    '../l2_u_last',...
-    '../l22_u_last',...
-    '../l2_01_last',...
-    '../l2_1_last',...
-    '../l2_10_last',...
-    '../l2_100_last',...
-    '../l22_01_last','../l22_01_alltrain_last',...
-    '../l22_1_last','../l22_1_alltrain_last',...
-    '../l22_10_last',...
-    '../l22_100_last','../l22_100_alltrain_last'...
-    };
+results_paths={'../data_patch_test67'};
 
 
 
@@ -83,7 +72,7 @@ for k=1:length(names_qpi)
          
         img_num=img_num+1;
         
-        if mod(kk,5)~=0
+        if mod(kk,7)~=0
             continue
         end
         
@@ -114,55 +103,30 @@ for k=1:length(names_qpi)
                 qpi=imread([results_path '/qpi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
                 dapi=imread([results_path '/dapi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
                 
-                fake_qpi=imread([results_path '/ffqpi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
-                fake_dapi=imread([results_path '/ffdapi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
+%                 fake_qpi=imread([results_path '/ffqpi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
+%                 fake_dapi=imread([results_path '/ffdapi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
                 
                 
-                poskladany_qpi(x:xx,y:yy)=poskladany_qpi(x:xx,y:yy)+qpi.*vahokno;
-                poskladany_dapi(x:xx,y:yy)=poskladany_dapi(x:xx,y:yy)+dapi.*vahokno;
-                poskladany_fake_qpi(x:xx,y:yy)=poskladany_fake_qpi(x:xx,y:yy)+fake_qpi.*vahokno;
-                poskladany_fake_dapi(x:xx,y:yy)=poskladany_fake_dapi(x:xx,y:yy)+fake_dapi.*vahokno;
-                podelit(x:xx,y:yy)=podelit(x:xx,y:yy)+vahokno;
+                
+%                 qpi=imread([results_path '/qpi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
+%                 dapi=imread([results_path '/dapi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
                 
                 
+%                 qpi=imread([results_path '/qpi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
+%                 dapi=imread([results_path '/dapi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.tif']);
+                
+                 minus=0.90;
+            krat=9;
 
-%                 qpi=mat2gray(qpi,[-0.1 2.4]);
-%                 dapi=mat2gray(dapi,[0 1200]);
-%                 qpi=single(qpi);
-%                 dapi=single(dapi);
-%                 
-                
-                
+            tmp=(dapi*krat-minus)*255;
+            imwrite(uint8(cat(3,zeros(size(tmp)),zeros(size(tmp)),tmp)),['../vysledkove_obr2/qpi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.png'])
+    %         imwrite(uint8((dapi(pos(1):pos(1)+w_s,pos(2):pos(2)+w_s)*krat-minus)*255),['../vysledkove_obr/gt_dapi_' num2str(pos(1)) '_' num2str(pos(2)) '_'  num2str(k) '_' n '.png'])
+            imwrite(uint8(qpi*255),['../vysledkove_obr2/dapi_' num2str(img_num,'%07.f') '_' num2str(patch_num,'%03.f') '.png'])
+      
                 
              end
         
         end
-        
-        poskladany_qpi=poskladany_qpi./podelit;
-        poskladany_dapi=poskladany_dapi./podelit;
-        
-        poskladany_fake_qpi=poskladany_fake_qpi./podelit;
-        poskladany_fake_dapi=poskladany_fake_dapi./podelit;
-        
-        
-        name_qpi_tmp=split(name_qpi,'\');
-        name_qpi_tmp=name_qpi_tmp{end};
-        
-        name_dapi_tmp=split(name_dapi,'\');
-        name_dapi_tmp=name_dapi_tmp{end};
-%         
-        imwrite_single(single(poskladany_qpi),[results_path '/fullqpires_' num2str(kk,'%03.f') '_' name_qpi_tmp])
-        imwrite_single(single(poskladany_dapi),[results_path '/fulldapires_' num2str(kk,'%03.f')  '_'  name_dapi_tmp])
-        
-        imwrite_single(single(poskladany_fake_qpi),[results_path '/fullqpiresfake_' num2str(kk,'%03.f') '_' name_qpi_tmp])
-        imwrite_single(single(poskladany_fake_dapi),[results_path '/fulldapiresfake_' num2str(kk,'%03.f')  '_'  name_dapi_tmp])
-        
-        
-        
-%         imwrite_single(single(poskladany_qpi),['../gt_5' '/fullqpires_' num2str(kk,'%03.f') '_' name_qpi_tmp])
-%         imwrite_single(single(poskladany_dapi),['../gt_5' '/fulldapires_' num2str(kk,'%03.f')  '_'  name_dapi_tmp])
-%         
-%         imshow(poskladany_dapi,[])
         
     end
     
