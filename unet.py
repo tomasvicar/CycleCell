@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
+from torch.nn import init
+
 
 import torch.nn.utils.weight_norm as weightNorm
 
@@ -111,9 +113,15 @@ class Unet(nn.Module):
         self.up_concat1 = unetUp(filters[1], filters[1])
         self.up_conv1=nn.Sequential(unetConv2(filters[0]+filters[1], filters[0] ),unetConv2(filters[0], filters[0],do_batch=0 ))
         
+        self.tanh = nn.Tanh()
         
         
         self.final = nn.Conv2d(filters[0], 1, 1)
+        
+        for i, m in enumerate(self.modules()):
+            if isinstance(m, nn.Conv2d):
+                init.xavier_normal_(m.weight)
+                init.constant_(m.bias, 0)
         
         
     def forward(self, inputs):
@@ -149,6 +157,8 @@ class Unet(nn.Module):
         
 
         x = self.final(x)
+        
+        x=self.tanh(x)
         
 #        sig=self.sm(final)
         return x

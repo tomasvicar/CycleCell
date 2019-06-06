@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn import init
 
 
 class Conv2BnRelu(nn.Module):
@@ -8,14 +9,15 @@ class Conv2BnRelu(nn.Module):
         super().__init__()
     
         self.conv=nn.Conv2d(in_size, out_size,filter_size,stride,pad)
-        self.bn=nn.BatchNorm2d(out_size,momentum=0.1)
+#        self.bn=nn.BatchNor2m2d(out_size,momentum=0.1)
+#        self.bn=nn.InstanceNorm2d(out_size)
 
 #        dov=0.1
 #        self.do=nn.Sequential(nn.Dropout(dov),nn.Dropout2d(dov))
 
     def forward(self, inputs):
         outputs = self.conv(inputs)
-        outputs = self.bn(outputs)          
+#        outputs = self.bn(outputs)          
         outputs=F.relu(outputs)
 #        outputs = self.do(outputs)
 
@@ -71,6 +73,12 @@ class ResnetLike128(nn.Module):
 
 
         self.finalc=nn.Conv2d(K, 1,1)
+        
+        for i, m in enumerate(self.modules()):
+            if isinstance(m, nn.Conv2d):
+                init.xavier_normal_(m.weight)
+                init.constant_(m.bias, 0)
+        
     
     def sum_remve_border(self,input1,input2,kolik=2):
         
